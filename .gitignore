@@ -444,3 +444,5 @@ SamplePersianAdminPanel/*/obj/*
 
 **/Logs/*
 SamplePersianAdminPanel/v16/Server/sqlite3
+PersianAdminPanel/PersianAdminPanel/PersianAdminPanel.csproj
+*.csproj

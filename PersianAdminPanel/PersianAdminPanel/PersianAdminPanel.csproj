@@ -45,10 +45,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -133,17 +141,43 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Model1.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserSignin.cs" />
+    <Compile Include="Models\UserSignup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="User.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserActivation.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\AdoUtil.cs" />
+    <Compile Include="Utils\CookieUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css\SigninPage.css" />
+    <Content Include="Scripts\plugins\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Scripts\plugins\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Content\css\adminlte.css" />
     <Content Include="Content\css\adminlte.min.css" />
     <Content Include="Content\css\bootstrap-rtl.min.css" />
@@ -191,6 +225,16 @@
     <Content Include="fonts\Vazir.woff" />
     <Content Include="fonts\Vazir.woff2" />
     <Content Include="Content\css\adminlte.css.map" />
+    <Content Include="Model1.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
+    <Content Include="Model1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\js\adminlte.js" />
     <Content Include="Scripts\js\adminlte.min.js" />
     <Content Include="Scripts\js\demo.js" />
@@ -764,18 +808,29 @@
     <Content Include="Scripts\plugins\ionslider\ion.rangeSlider.min.js" />
     <Content Include="Scripts\plugins\ionslider\ion.rangeSlider.skinFlat.css" />
     <Content Include="Scripts\plugins\ionslider\ion.rangeSlider.skinNice.css" />
+    <None Include="Scripts\plugins\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\plugins\jquery.validate.js" />
+    <Content Include="Scripts\plugins\jquery.validate.min.js" />
+    <Content Include="Scripts\plugins\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\plugins\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\plugins\jQueryUI\jquery-ui.js" />
     <Content Include="Scripts\plugins\jQueryUI\jquery-ui.min.js" />
-    <Content Include="Scripts\plugins\jquery\core.js" />
-    <Content Include="Scripts\plugins\jquery\jquery.js" />
-    <Content Include="Scripts\plugins\jquery\jquery.min.js" />
-    <Content Include="Scripts\plugins\jquery\jquery.slim.js" />
-    <Content Include="Scripts\plugins\jquery\jquery.slim.min.js" />
+    <Content Include="Scripts\plugins\jquery-de\core.js" />
+    <Content Include="Scripts\plugins\jquery-de\jquery.js" />
+    <Content Include="Scripts\plugins\jquery-de\jquery.min.js" />
+    <Content Include="Scripts\plugins\jquery-de\jquery.slim.js" />
+    <Content Include="Scripts\plugins\jquery-de\jquery.slim.min.js" />
+    <None Include="Scripts\plugins\jquery\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\plugins\jquery\jquery-3.3.1.js" />
+    <Content Include="Scripts\plugins\jquery\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\plugins\jquery\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\plugins\jquery\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\plugins\jvectormap\jquery-jvectormap-1.2.2.css" />
     <Content Include="Scripts\plugins\jvectormap\jquery-jvectormap-1.2.2.min.js" />
     <Content Include="Scripts\plugins\jvectormap\jquery-jvectormap-usa-en.js" />
     <Content Include="Scripts\plugins\jvectormap\jquery-jvectormap-world-mill-en.js" />
     <Content Include="Scripts\plugins\knob\jquery.knob.js" />
+    <Content Include="Scripts\plugins\modernizr-2.8.3.js" />
     <Content Include="Scripts\plugins\morris\morris.css" />
     <Content Include="Scripts\plugins\morris\morris.js" />
     <Content Include="Scripts\plugins\morris\morris.min.js" />
@@ -865,23 +920,29 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
-    <Content Include="Views\Home\AdminDashboard.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Scripts\js\adminlte.js.map" />
     <Content Include="Scripts\js\adminlte.min.js.map" />
+    <Content Include="Scripts\plugins\jquery\jquery-3.3.1.min.map" />
+    <Content Include="Scripts\plugins\jquery\jquery-3.3.1.slim.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Scripts\plugins\bootstrap\css\bootstrap-theme.min.css.map" />
+    <Content Include="Scripts\plugins\bootstrap\css\bootstrap-theme.css.map" />
+    <EntityDeploy Include="Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Model1.edmx.diagram">
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
     <None Include="packages.config" />
     <Content Include="Scripts\plugins\bootstrap\css\bootstrap-grid.css.map" />
     <Content Include="Scripts\plugins\bootstrap\css\bootstrap-grid.min.css.map" />
@@ -919,8 +980,8 @@
     <Content Include="Scripts\plugins\font-awesome\fonts\FontAwesome.otf" />
     <Content Include="Scripts\plugins\input-mask\phone-codes\phone-be.json" />
     <Content Include="Scripts\plugins\input-mask\phone-codes\phone-codes.json" />
-    <Content Include="Scripts\plugins\jquery\jquery.min.map" />
-    <Content Include="Scripts\plugins\jquery\jquery.slim.min.map" />
+    <Content Include="Scripts\plugins\jquery-de\jquery.min.map" />
+    <Content Include="Scripts\plugins\jquery-de\jquery.slim.min.map" />
     <Content Include="Scripts\plugins\popper\esm\popper-utils.js.map" />
     <Content Include="Scripts\plugins\popper\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\plugins\popper\esm\popper.js.map" />
@@ -933,6 +994,12 @@
     <Content Include="Scripts\plugins\popper\umd\popper-utils.min.js.map" />
     <Content Include="Scripts\plugins\popper\umd\popper.js.map" />
     <Content Include="Scripts\plugins\popper\umd\popper.min.js.map" />
+    <Content Include="Views\Auth\Register.cshtml" />
+    <Content Include="Views\Home\Profile.cshtml" />
+    <Content Include="Views\Auth\Signin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

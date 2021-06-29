@@ -1,0 +1,165 @@
+﻿@model PersianAdminPanel.Models.UserSignin
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6 ielt8"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7 ielt8"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    
+    <link href="~/Content/css/SigninPage.css" rel="stylesheet" />
+    <title>sign in</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <div class="container">
+        <section id="content">
+            @using (Html.BeginForm("Signin", "Auth", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <h1>Login Form</h1>
+                <div>
+                    @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @data_val = "true", @required = "required", id = "username", placeholder = Html.DisplayNameFor(x => x.Username) })
+                    @*<input type="text" placeholder="Username" required="" id="username" />*@
+                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "error" })
+
+                </div>
+                <div>
+                    @Html.PasswordFor(model => model.Password, new { @class = "password", @data_val = "true", @required = "required", @type = "password", id = "password", placeholder = Html.DisplayNameFor(x => x.Password) })
+                    @*<input type="password" placeholder="Password" required="" id="password" />*@
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "error" })
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label>@Html.CheckBoxFor(model => model.RememberMe)&nbsp;@Html.DisplayNameFor(model => model.RememberMe)</label>
+                    </div>
+                </div>
+                <div>
+                    <input type="submit" value="Log in" />
+                    <a href="#">Lost your password?</a>
+                    <a href="#">Register</a>
+                </div>
+            }
+            <!-- form -->
+
+        </section><!-- content -->
+    </div><!-- container -->
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @if (@ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+            $(function () {
+                alert("@ViewBag.Message")
+            });
+        </script>
+    }
+
+</body>
+</html>
+
+@*<!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Index</title>
+        <style type="text/css">
+            body {
+                font-family: Arial;
+                font-size: 10pt;
+            }
+
+            table {
+                border: 1px solid #ccc;
+                border-collapse: collapse;
+            }
+
+                table th {
+                    background-color: #F7F7F7;
+                    color: #333;
+                    font-weight: bold;
+                }
+
+                table th, table td {
+                    padding: 5px;
+                    border: 1px solid #ccc;
+                }
+
+            .error {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        @using (Html.BeginForm("Signin", "Auth", FormMethod.Post))
+        {
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th colspan="3">
+                        Login
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        Username
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.Username)
+                    </td>
+                    <td>
+                        @Html.ValidationMessageFor(m => m.Username, "", new { @class = "error" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Password
+                    </td>
+                    <td>
+                        @Html.PasswordFor(m => m.Password)
+                    </td>
+                    <td>
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "error" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Remember Me
+                    </td>
+                    <td>
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="Submit" />
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        }
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
+        @if (@ViewBag.Message != null)
+        {
+            <script type="text/javascript">
+                $(function () {
+                    alert("@ViewBag.Message")
+                });
+            </script>
+        }
+    </body>
+    </html>*@
+
+
+
+
