@@ -1,14 +1,20 @@
-﻿using PersianAdminPanel.Models;
+﻿using Common.DataModel.Domain.Models;
 using PersianAdminPanel.Utils;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
 
 namespace PersianAdminPanel.Controllers
 {
+    [HandleError]
     public class AuthController : Controller
     {
+        private readonly Stopwatch stopwatch = new Stopwatch();
+        private readonly Logger.Logger logger = new Logger.Logger();
+        private readonly BusinessLogic.Client.Authorization.Authorization _authorization = new BusinessLogic.Client.Authorization.Authorization();
+
         // GET: Auth
         [AllowAnonymous]
         public ActionResult Signin()
@@ -41,60 +47,54 @@ namespace PersianAdminPanel.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Signin(UserSignin user)
         {
-            if (User.Identity.IsAuthenticated)
+            try
             {
-                return RedirectToAction("Dashboard", "Admin");
-            }
-            else
-            {
-                if (Session["Captcha"] == null || Session["Captcha"].ToString() != user.Captcha)
+                stopwatch.Start();
+
+                if (User.Identity.IsAuthenticated)
+                {
+                    return RedirectToAction("Dashboard", "Admin");
+                }
+                else if (Session["Captcha"] == null || Session["Captcha"].ToString() != user.Captcha)
                 {
                     ModelState.AddModelError("Captcha", "entered sum value did not match, please try again");
                 }
                 //else if (!ModelState.IsValid)
                 //{
-                //    var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value.Errors }).ToArray();
+                //    ViewBag.Message = string.Join("; ", ModelState.Values
+                //                        .SelectMany(x => x.Errors)
+                //                        .Select(x => x.ErrorMessage));
+
                 //}
                 else
                 {
-
-                    using (var usersEntities = new SampleLoginDbEntities())
+                    var result = _authorization.Signin(user);
+                    if (result.HasError())
                     {
-                        int? userId = usersEntities.ValidateUser(user.Username, user.Password).FirstOrDefault();
-
-                        string message = string.Empty;
-                        switch (userId.Value)
-                        {
-                            case -1:
-                                message = "Username and/or password is incorrect.";
-                                break;
-                            case -2:
-                                message = "Account has not been activated.";
-                                break;
-                            default:
-                                {
-                                    var dict = new System.Collections.Generic.Dictionary<string, string>();
-                                    Guid userToken = usersEntities.UserActivations.Where(c => c.UserId == userId.Value).Select(x => x.ActivationCode).First();
-
-                                    dict.Add("issued", DateTime.Now.ToString());
-                                    DateTime expDate = DateTime.Now.AddYears(1);
-                                    dict.Add("exp", expDate.ToString());
-                                    dict.Add("Username", user.Username);
-                                    dict.Add("UserId", userId.Value.ToString());
-                                    dict.Add("Token", userToken.ToString());
-                                    CookieUtils.StoreInCookie("auth", null, dict, expDate);
-                                    FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
-                                    return RedirectToAction("Dashboard", "Admin");
-                                }
-                        }
-
-                        //ViewBag.account = account;
-                        ViewBag.Message = message;
+                        ViewBag.Message = result.Message;
                     }
-
+                    else
+                    {
+                        result.Resource.TryGetValue("exp", out string expStr);
+                        var exp = DateTime.Parse(expStr);
+                        CookieUtils.StoreInCookie("auth", null, result.Resource, exp);
+                        FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
+                        return RedirectToAction("Dashboard", "Admin");
+                        //ViewBag.account = account;
+                    }
                 }
+
+                stopwatch.Stop();
+                user.Password = "";
+                logger.Verbose(duration: stopwatch.ElapsedMilliseconds, response: user, request: user);
+
+                return View(user);
             }
-            return View(user);
+            catch (Exception ex)
+            {
+                logger.Fatal(exception: ex, null, request: user);
+                throw ex;
+            }
         }
 
         [AllowAnonymous]
@@ -115,44 +115,43 @@ namespace PersianAdminPanel.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Signup(UserSignup user)
         {
-            if (User.Identity.IsAuthenticated)
+            try
             {
-                return RedirectToAction("Dashboard", "Admin");
-            }
-            else
-            {
-                using (var usersEntities = new SampleLoginDbEntities())
+                stopwatch.Start();
+                if (User.Identity.IsAuthenticated)
                 {
-                    usersEntities.Users.Add(new User()
-                    {
-                        CreatedDate = user.CreatedDate,
-                        Email = user.Email,
-                        LastLoginDate = user.LastLoginDate,
-                        Password = user.Password,
-                        UserId = user.UserId,
-                        Username = user.Username,
-                    });
-
-                    usersEntities.SaveChanges();
-                    string message = string.Empty;
-                    switch (user.UserId)
-                    {
-                        case -1:
-                            message = "Username already exists.\\nPlease choose a different username.";
-                            break;
-                        case -2:
-                            message = "Supplied email address has already been used.";
-                            break;
-                        default:
-                            message = "Registration successful.\\nUser Id: " + user.UserId.ToString();
-                            break;
-                    }
-                    ViewBag.Message = message;
+                    return RedirectToAction("Dashboard", "Admin");
                 }
+                else if (Session["Captcha"] == null || Session["Captcha"].ToString() != user.Captcha)
+                {
+                    ModelState.AddModelError("Captcha", "entered sum value did not match, please try again");
+                }
+                else if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value.Errors }).ToArray();
+                    ViewBag.Message = errors[0];
+
+                }
+                else
+                {
+                    var result = _authorization.Signup(user);
+                    if (result.HasError())
+                    {
+                        ViewBag.Message = result.Message;
+                    }
+                }
+                stopwatch.Stop();
+                user.Password = "";
+                logger.Verbose(duration: stopwatch.ElapsedMilliseconds, response: user, request: user);
+
                 return View(user);
             }
+            catch (Exception ex)
+            {
+                logger.Fatal(exception: ex, null, request: user);
+                throw ex;
+            }
         }
-
 
         [AcceptVerbs(HttpVerbs.Post | HttpVerbs.Get)]
         [Authorize]

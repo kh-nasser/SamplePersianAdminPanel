@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace PersianAdminPanel.Models
+﻿namespace Common.DataModel.Domain.Models
 {
-    public class UserSignin
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
+    public partial class UserSignup
     {
         public int UserId { get; set; }
 
@@ -24,8 +24,6 @@ namespace PersianAdminPanel.Models
         public System.DateTime CreatedDate { get; set; }
 
         public Nullable<System.DateTime> LastLoginDate { get; set; }
-
-        public bool RememberMe { get; set; }
 
         [Required(ErrorMessage = "please enter {0}")]
         [Display(Name = "sum of ")]

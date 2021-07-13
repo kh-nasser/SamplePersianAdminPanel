@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PersianAdminPanel
+namespace DataAccess
 {
     using System;
     using System.Data.Entity;
@@ -15,10 +15,10 @@ namespace PersianAdminPanel
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class SampleLoginDbEntities : DbContext
+    public partial class PersianAdminPanelEntities : DbContext
     {
-        public SampleLoginDbEntities()
-            : base("name=SampleLoginDbEntities")
+        public PersianAdminPanelEntities()
+            : base("name=PersianAdminPanelEntities")
         {
         }
     
@@ -27,6 +27,7 @@ namespace PersianAdminPanel
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<tblLog> tblLogs { get; set; }
         public virtual DbSet<UserActivation> UserActivations { get; set; }
         public virtual DbSet<User> Users { get; set; }
     
@@ -45,6 +46,39 @@ namespace PersianAdminPanel
                 new ObjectParameter("Email", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Insert_User", usernameParameter, passwordParameter, emailParameter);
+        }
+    
+        public virtual int spoc_logSqlError(Nullable<int> eRROR_NUMBER, Nullable<int> eRROR_SEVERITY, Nullable<int> eRROR_STATE, string eRROR_PROCEDURE, Nullable<int> eRROR_LINE, string eRROR_MESSAGE, string parameters)
+        {
+            var eRROR_NUMBERParameter = eRROR_NUMBER.HasValue ?
+                new ObjectParameter("ERROR_NUMBER", eRROR_NUMBER) :
+                new ObjectParameter("ERROR_NUMBER", typeof(int));
+    
+            var eRROR_SEVERITYParameter = eRROR_SEVERITY.HasValue ?
+                new ObjectParameter("ERROR_SEVERITY", eRROR_SEVERITY) :
+                new ObjectParameter("ERROR_SEVERITY", typeof(int));
+    
+            var eRROR_STATEParameter = eRROR_STATE.HasValue ?
+                new ObjectParameter("ERROR_STATE", eRROR_STATE) :
+                new ObjectParameter("ERROR_STATE", typeof(int));
+    
+            var eRROR_PROCEDUREParameter = eRROR_PROCEDURE != null ?
+                new ObjectParameter("ERROR_PROCEDURE", eRROR_PROCEDURE) :
+                new ObjectParameter("ERROR_PROCEDURE", typeof(string));
+    
+            var eRROR_LINEParameter = eRROR_LINE.HasValue ?
+                new ObjectParameter("ERROR_LINE", eRROR_LINE) :
+                new ObjectParameter("ERROR_LINE", typeof(int));
+    
+            var eRROR_MESSAGEParameter = eRROR_MESSAGE != null ?
+                new ObjectParameter("ERROR_MESSAGE", eRROR_MESSAGE) :
+                new ObjectParameter("ERROR_MESSAGE", typeof(string));
+    
+            var parametersParameter = parameters != null ?
+                new ObjectParameter("Parameters", parameters) :
+                new ObjectParameter("Parameters", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spoc_logSqlError", eRROR_NUMBERParameter, eRROR_SEVERITYParameter, eRROR_STATEParameter, eRROR_PROCEDUREParameter, eRROR_LINEParameter, eRROR_MESSAGEParameter, parametersParameter);
         }
     
         public virtual ObjectResult<Nullable<int>> Validate_User(string username, string password)

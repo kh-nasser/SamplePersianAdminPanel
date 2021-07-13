@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -7,8 +8,11 @@ using System.Web.Mvc;
 
 namespace PersianAdminPanel.Controllers
 {
+    [HandleError]
     public class CaptchaController : Controller
     {
+        private readonly Stopwatch stopwatch = new Stopwatch();
+        private readonly Logger.Logger logger = new Logger.Logger();
         public ActionResult CaptchaImage(string prefix, bool noisy = true)
         {
             var rand = new Random((int)DateTime.Now.Ticks);

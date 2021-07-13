@@ -4,7 +4,19 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SampleLoginDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="PersianAdminPanelModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Message" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="LogLevel" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Callsite" Type="nvarchar(max)" />
+          <Property Name="Duration" Type="bigint" />
+          <Property Name="Exception" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="UserActivation">
           <Key>
             <PropertyRef Name="UserId" />
@@ -28,11 +40,21 @@
           <Parameter Name="Password" Type="nvarchar" Mode="In" />
           <Parameter Name="Email" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="spoc_logSqlError" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ERROR_NUMBER" Type="int" Mode="In" />
+          <Parameter Name="ERROR_SEVERITY" Type="int" Mode="In" />
+          <Parameter Name="ERROR_STATE" Type="int" Mode="In" />
+          <Parameter Name="ERROR_PROCEDURE" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="ERROR_LINE" Type="int" Mode="In" />
+          <Parameter Name="ERROR_MESSAGE" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Parameters" Type="nvarchar(max)" Mode="In" />
+        </Function>
         <Function Name="Validate_User" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
           <Parameter Name="Password" Type="nvarchar" Mode="In" />
         </Function>
-        <EntityContainer Name="SampleLoginDbModelStoreContainer">
+        <EntityContainer Name="PersianAdminPanelModelStoreContainer">
+          <EntitySet Name="tblLog" EntityType="Self.tblLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserActivation" EntityType="Self.UserActivation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
@@ -40,7 +62,19 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="SampleLoginDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="PersianAdminPanelModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="LogLevel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Callsite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Duration" Type="Int64" />
+          <Property Name="Exception" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="UserActivation">
           <Key>
             <PropertyRef Name="UserId" />
@@ -59,13 +93,23 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastLoginDate" Type="DateTime" Precision="3" />
         </EntityType>
-        <EntityContainer Name="SampleLoginDbEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="PersianAdminPanelEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblLogs" EntityType="Self.tblLog" />
           <EntitySet Name="UserActivations" EntityType="Self.UserActivation" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <FunctionImport Name="Insert_User" ReturnType="Collection(Int32)">
             <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="Password" Mode="In" Type="String" />
             <Parameter Name="Email" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spoc_logSqlError">
+            <Parameter Name="ERROR_NUMBER" Mode="In" Type="Int32" />
+            <Parameter Name="ERROR_SEVERITY" Mode="In" Type="Int32" />
+            <Parameter Name="ERROR_STATE" Mode="In" Type="Int32" />
+            <Parameter Name="ERROR_PROCEDURE" Mode="In" Type="String" />
+            <Parameter Name="ERROR_LINE" Mode="In" Type="Int32" />
+            <Parameter Name="ERROR_MESSAGE" Mode="In" Type="String" />
+            <Parameter Name="Parameters" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Validate_User" ReturnType="Collection(Int32)">
             <Parameter Name="Username" Mode="In" Type="String" />
@@ -81,9 +125,22 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="SampleLoginDbModelStoreContainer" CdmEntityContainer="SampleLoginDbEntities">
+        <EntityContainerMapping StorageEntityContainer="PersianAdminPanelModelStoreContainer" CdmEntityContainer="PersianAdminPanelEntities">
+          <EntitySetMapping Name="tblLogs">
+            <EntityTypeMapping TypeName="PersianAdminPanelModel.tblLog">
+              <MappingFragment StoreEntitySet="tblLog">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="LogLevel" ColumnName="LogLevel" />
+                <ScalarProperty Name="Callsite" ColumnName="Callsite" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="Exception" ColumnName="Exception" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="UserActivations">
-            <EntityTypeMapping TypeName="SampleLoginDbModel.UserActivation">
+            <EntityTypeMapping TypeName="PersianAdminPanelModel.UserActivation">
               <MappingFragment StoreEntitySet="UserActivation">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="ActivationCode" ColumnName="ActivationCode" />
@@ -91,7 +148,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="SampleLoginDbModel.User">
+            <EntityTypeMapping TypeName="PersianAdminPanelModel.User">
               <MappingFragment StoreEntitySet="Users">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
@@ -101,9 +158,9 @@
                 <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
               </MappingFragment>
             </EntityTypeMapping>
-            <EntityTypeMapping TypeName="SampleLoginDbModel.User">
+            <EntityTypeMapping TypeName="PersianAdminPanelModel.User">
               <ModificationFunctionMapping>
-                <InsertFunction FunctionName="SampleLoginDbModel.Store.Insert_User">
+                <InsertFunction FunctionName="PersianAdminPanelModel.Store.Insert_User">
                   <ScalarProperty Name="Email" ParameterName="Email" />
                   <ScalarProperty Name="Password" ParameterName="Password" />
                   <ScalarProperty Name="Username" ParameterName="Username" />
@@ -112,9 +169,10 @@
               </ModificationFunctionMapping>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Insert_User" FunctionName="SampleLoginDbModel.Store.Insert_User" />
-          <FunctionImportMapping FunctionImportName="Validate_User" FunctionName="SampleLoginDbModel.Store.Validate_User" />
-          <FunctionImportMapping FunctionImportName="ValidateUser" FunctionName="SampleLoginDbModel.Store.Validate_User" />
+          <FunctionImportMapping FunctionImportName="Insert_User" FunctionName="PersianAdminPanelModel.Store.Insert_User" />
+          <FunctionImportMapping FunctionImportName="spoc_logSqlError" FunctionName="PersianAdminPanelModel.Store.spoc_logSqlError" />
+          <FunctionImportMapping FunctionImportName="Validate_User" FunctionName="PersianAdminPanelModel.Store.Validate_User" />
+          <FunctionImportMapping FunctionImportName="ValidateUser" FunctionName="PersianAdminPanelModel.Store.Validate_User" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

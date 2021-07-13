@@ -13,6 +13,8 @@ namespace PersianAdminPanel
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        private readonly BusinessLogic.Client.Authorization.Authorization _authorization = new BusinessLogic.Client.Authorization.Authorization();
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -33,7 +35,7 @@ namespace PersianAdminPanel
                 string userName = CookieUtils.GetFromCookie("auth", "Username");
                 Guid userToken = Guid.Parse(CookieUtils.GetFromCookie("auth", "Token"));
                 long.TryParse(CookieUtils.GetFromCookie("auth", "UserId"), out long userId);
-                if (validateUserToken(userId, userToken))
+                if (_authorization.ValidateUserToken(userId, userToken))
                 {
                     authorized = true;
                 }
@@ -48,17 +50,10 @@ namespace PersianAdminPanel
             }
         }
 
-        bool validateUserToken(long userId, Guid userToken)
+        protected void Application_Error()
         {
-            bool isAuthorized = false;
-            using (var usersEntities = new SampleLoginDbEntities())
-            {
-                long id = usersEntities.UserActivations.Where(c => c.ActivationCode == userToken).Select(x => x.UserId).FirstOrDefault();
-
-                isAuthorized = id == userId;
-            }
-            return isAuthorized;
-
+            var ex = Server.GetLastError();
+            //log an exception
         }
     }
 }

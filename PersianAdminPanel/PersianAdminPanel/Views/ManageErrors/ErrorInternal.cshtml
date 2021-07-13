@@ -1,0 +1,32 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/css/errorInternal.css" rel="stylesheet" />
+    <title>ErrorInternal</title>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="overlay"></div>
+    <div class="terminal">
+        <h1>Error <span class="errorcode">404</span></h1>
+        <p class="output">The page you are looking for might have been removed, had its name changed or is temporarily unavailable.</p>
+        <p class="output">
+            Please try to @Html.ActionLink("return to the homepage", "Index", "Home", new { area = "User" }, null)
+
+            @if (Request.UrlReferrer != null)
+            {
+                @: or <a href="#" onclick="history.go(-1); return false;">go back</a> .
+            }
+
+        </p><p class="output">Good luck.</p>
+    </div>
+</body>
+</html>
+
