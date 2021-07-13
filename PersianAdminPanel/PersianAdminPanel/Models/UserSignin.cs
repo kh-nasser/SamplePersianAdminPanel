@@ -26,5 +26,9 @@ namespace PersianAdminPanel.Models
         public Nullable<System.DateTime> LastLoginDate { get; set; }
 
         public bool RememberMe { get; set; }
+
+        [Required(ErrorMessage = "please enter {0}")]
+        [Display(Name = "sum of ")]
+        public string Captcha { get; set; }
     }
 }

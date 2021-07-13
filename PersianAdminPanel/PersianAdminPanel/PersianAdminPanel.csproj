@@ -143,6 +143,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\CaptchaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -175,6 +176,7 @@
     <Compile Include="Utils\CookieUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Cover.css" />
     <Content Include="Content\css\SigninPage.css" />
     <Content Include="Scripts\plugins\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Scripts\plugins\bootstrap\css\bootstrap-theme.min.css" />
@@ -928,6 +930,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Captcha\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

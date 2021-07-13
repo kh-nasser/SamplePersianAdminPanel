@@ -47,41 +47,54 @@ namespace PersianAdminPanel.Controllers
             }
             else
             {
-                using (var usersEntities = new SampleLoginDbEntities())
+                if (Session["Captcha"] == null || Session["Captcha"].ToString() != user.Captcha)
                 {
-                    int? userId = usersEntities.ValidateUser(user.Username, user.Password).FirstOrDefault();
+                    ModelState.AddModelError("Captcha", "entered sum value did not match, please try again");
+                }
+                //else if (!ModelState.IsValid)
+                //{
+                //    var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value.Errors }).ToArray();
+                //}
+                else
+                {
 
-                    string message = string.Empty;
-                    switch (userId.Value)
+                    using (var usersEntities = new SampleLoginDbEntities())
                     {
-                        case -1:
-                            message = "Username and/or password is incorrect.";
-                            break;
-                        case -2:
-                            message = "Account has not been activated.";
-                            break;
-                        default:
-                            {
-                                var dict = new System.Collections.Generic.Dictionary<string, string>();
-                                Guid userToken = usersEntities.UserActivations.Where(c => c.UserId == userId.Value).Select(x => x.ActivationCode).First();
+                        int? userId = usersEntities.ValidateUser(user.Username, user.Password).FirstOrDefault();
 
-                                dict.Add("issued", DateTime.Now.ToString());
-                                DateTime expDate = DateTime.Now.AddYears(1);
-                                dict.Add("exp", expDate.ToString());
-                                dict.Add("Username", user.Username);
-                                dict.Add("UserId", userId.Value.ToString());
-                                dict.Add("Token", userToken.ToString());
-                                CookieUtils.StoreInCookie("auth", null, dict, expDate);
-                                FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
-                                return RedirectToAction("Dashboard", "Admin");
-                            }
+                        string message = string.Empty;
+                        switch (userId.Value)
+                        {
+                            case -1:
+                                message = "Username and/or password is incorrect.";
+                                break;
+                            case -2:
+                                message = "Account has not been activated.";
+                                break;
+                            default:
+                                {
+                                    var dict = new System.Collections.Generic.Dictionary<string, string>();
+                                    Guid userToken = usersEntities.UserActivations.Where(c => c.UserId == userId.Value).Select(x => x.ActivationCode).First();
+
+                                    dict.Add("issued", DateTime.Now.ToString());
+                                    DateTime expDate = DateTime.Now.AddYears(1);
+                                    dict.Add("exp", expDate.ToString());
+                                    dict.Add("Username", user.Username);
+                                    dict.Add("UserId", userId.Value.ToString());
+                                    dict.Add("Token", userToken.ToString());
+                                    CookieUtils.StoreInCookie("auth", null, dict, expDate);
+                                    FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
+                                    return RedirectToAction("Dashboard", "Admin");
+                                }
+                        }
+
+                        //ViewBag.account = account;
+                        ViewBag.Message = message;
                     }
 
-                    ViewBag.Message = message;
                 }
-
-                return View(user);
             }
+            return View(user);
         }
 
         [AllowAnonymous]
@@ -155,7 +168,7 @@ namespace PersianAdminPanel.Controllers
                 Session.RemoveAll();
                 Session.Abandon();
             }
-            return RedirectToAction("SignIn","Auth");
+            return RedirectToAction("SignIn", "Auth");
         }
     }
 }

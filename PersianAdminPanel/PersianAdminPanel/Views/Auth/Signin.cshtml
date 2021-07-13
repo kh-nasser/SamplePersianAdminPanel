@@ -1,5 +1,4 @@
 ﻿@model PersianAdminPanel.Models.UserSignin
-
 @{
     Layout = null;
 }
@@ -11,10 +10,12 @@
 <html lang="en">
 <!--<![endif]-->
 <head>
-    
+
     <link href="~/Content/css/SigninPage.css" rel="stylesheet" />
     <title>sign in</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
     <div class="container">
@@ -34,10 +35,35 @@
                     @*<input type="password" placeholder="Password" required="" id="password" />*@
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "error" })
                 </div>
+                
                 <div>
-                    <div class="checkbox">
-                        <label>@Html.CheckBoxFor(model => model.RememberMe)&nbsp;@Html.DisplayNameFor(model => model.RememberMe)</label>
+
+                    <div class="form-group">
+                        <button id="refresh" class="btn" style="display:inline-block">
+                            <i class="fa fa-refresh" aria-hidden="true"></i>
+
+                            @Html.LabelFor(model => model.Captcha)
+                            <img alt="Captcha" id="imgcpatcha" src="@Url.Action("CaptchaImage","Captcha")" style="float: right; margin-left: 0.5em" />
+                        </button>
                     </div>
+                    <br />
+
+                    <div class="form-group">
+                        @Html.TextBoxFor(model => model.Captcha, new { @class = "form-control", @data_val = "true", @required = "required", id = "captcha", placeholder = Html.DisplayNameFor(x => x.Captcha) })
+                        @*<input type="text" placeholder="Username" required="" id="username" />*@
+                        @Html.ValidationMessageFor(model => model.Captcha, "", new { @class = "error" })
+
+                    </div>
+                    <div>
+                        <div class="checkbox">
+                            <label>@Html.CheckBoxFor(model => model.RememberMe)&nbsp;@Html.DisplayNameFor(model => model.RememberMe)</label>
+                        </div>
+                    </div>
+                    <p>
+                        @Html.ValidationMessage("CustomError")
+                        <br />
+                        @ViewBag.ErrorMessage
+                    </p>
                 </div>
                 <div>
                     <input type="submit" value="Log in" />
@@ -60,106 +86,29 @@
             });
         </script>
     }
+    <script type="text/javascript">
+        $('#refresh').click(function () {
+            var d = new Date();
+            $("#imgcpatcha").attr("src", "/Captcha/CaptchaImage?" + String(d.getTime()));
+        });
 
+    @*$(function () {
+        $('#refresh').click(function () {
+            $("#imgcpatcha").attr("src", "/Captcha/CaptchaImage?" + String(Math.random()));
+            return
+            $.ajax({
+                url: '@Url.Action("CaptchaImage","Captcha")',
+                type: "GET",
+                data: null
+            })
+                .done(function (functionResult) {
+
+                    $("#imgcpatcha").attr("src", "/Captcha/CaptchaImage?" + String(Math.random()));
+
+            });
+
+        });
+    });*@
+    </script>
 </body>
 </html>
-
-@*<!DOCTYPE html>
-
-    <html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>Index</title>
-        <style type="text/css">
-            body {
-                font-family: Arial;
-                font-size: 10pt;
-            }
-
-            table {
-                border: 1px solid #ccc;
-                border-collapse: collapse;
-            }
-
-                table th {
-                    background-color: #F7F7F7;
-                    color: #333;
-                    font-weight: bold;
-                }
-
-                table th, table td {
-                    padding: 5px;
-                    border: 1px solid #ccc;
-                }
-
-            .error {
-                color: red;
-            }
-        </style>
-    </head>
-    <body>
-        @using (Html.BeginForm("Signin", "Auth", FormMethod.Post))
-        {
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                    <th colspan="3">
-                        Login
-                    </th>
-                </tr>
-                <tr>
-                    <td>
-                        Username
-                    </td>
-                    <td>
-                        @Html.TextBoxFor(m => m.Username)
-                    </td>
-                    <td>
-                        @Html.ValidationMessageFor(m => m.Username, "", new { @class = "error" })
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Password
-                    </td>
-                    <td>
-                        @Html.PasswordFor(m => m.Password)
-                    </td>
-                    <td>
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "error" })
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Remember Me
-                    </td>
-                    <td>
-                        @Html.CheckBoxFor(m => m.RememberMe)
-                    </td>
-                    <td>
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <input type="submit" value="Submit" />
-                    </td>
-                    <td></td>
-                </tr>
-            </table>
-        }
-        @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/jqueryval")
-        @if (@ViewBag.Message != null)
-        {
-            <script type="text/javascript">
-                $(function () {
-                    alert("@ViewBag.Message")
-                });
-            </script>
-        }
-    </body>
-    </html>*@
-
-
-
-

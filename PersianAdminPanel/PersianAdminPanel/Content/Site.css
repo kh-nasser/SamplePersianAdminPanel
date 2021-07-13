@@ -22,3 +22,41 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.jumbotron,
+div {
+    background-color: rgba(255, 255, 255, 0.00);
+    color: #ffffff;
+}
+
+nav {
+    background-color: teal
+}
+
+body {
+    background: #141E30; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #243B55, #141E30); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #243B55, #141E30); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+
+ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+    a,
+    ul#nav li a:link,
+    ul#nav li a:visited,
+    ul#nav li.active a,
+    ul#nav li a:hover,
+    ul#nav li.active a {
+        text-decoration: none;
+        color: white;
+    }
+
+.navbar-toggler-icon {
+    color:white;
+    background-image: url(data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000…p='round' stroke-miterlimit='10' d='M47h22M4 15h22M423h22'/%3e%3c/svg%3e);
+
+}
