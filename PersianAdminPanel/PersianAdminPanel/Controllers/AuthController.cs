@@ -83,16 +83,16 @@ namespace PersianAdminPanel.Controllers
                         //ViewBag.account = account;
                     }
                 }
-
+                
                 stopwatch.Stop();
                 user.Password = "";
-                logger.Verbose(duration: stopwatch.ElapsedMilliseconds, response: user, request: user);
+                logger.Verbose(duration: stopwatch.ElapsedMilliseconds, response: user, request: new object[] { IPAddressHelper.GetClientIpAddress(Request), user });
 
                 return View(user);
             }
             catch (Exception ex)
             {
-                logger.Fatal(exception: ex, null, request: user);
+                logger.Fatal(exception: ex, null, request: new object[] { IPAddressHelper.GetClientIpAddress(Request), user });
                 throw ex;
             }
         }
@@ -142,13 +142,13 @@ namespace PersianAdminPanel.Controllers
                 }
                 stopwatch.Stop();
                 user.Password = "";
-                logger.Verbose(duration: stopwatch.ElapsedMilliseconds, response: user, request: user);
+                logger.Verbose(duration: stopwatch.ElapsedMilliseconds, response: user, request: new object[] { IPAddressHelper.GetClientIpAddress(Request), user });
 
                 return View(user);
             }
             catch (Exception ex)
             {
-                logger.Fatal(exception: ex, null, request: user);
+                logger.Fatal(exception: ex, null, request: new object[] { IPAddressHelper.GetClientIpAddress(Request), user });
                 throw ex;
             }
         }

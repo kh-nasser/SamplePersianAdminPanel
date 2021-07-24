@@ -204,7 +204,7 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                                 with font-awesome or any other icon font library -->
+    with font-awesome or any other icon font library -->
                             <li class="nav-item has-treeview menu-open">
                                 <a href="#" class="nav-link active">
                                     <i class="nav-icon fa fa-dashboard"></i>
@@ -215,9 +215,8 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="./index.html" class="nav-link active">
-                                            <i class="fa fa-circle-o nav-icon"></i>
-                                            <p>داشبورد اول</p>
+                                        <a href=@Url.Action("Dashboard", "Admin", new { }) class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon"></i> صفحه اصلی
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -234,6 +233,34 @@
                                     </li>
                                 </ul>
                             </li>
+
+                            <li class="nav-item has-treeview menu-open">
+                                <a href="#" class="nav-link active">
+                                    <i class="nav-icon fa fa-user"></i>
+                                    <p>
+                                        کاربران
+                                        <i class="right fa fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+
+                                    <li class="nav-item">
+                                        <a href=@Url.Action("UserApproval", "Admin", new { }) class="nav-link">
+                                                <i class="fa fa-user-plus nav-icon"></i>
+                                                <p>تایید ثبت نام</p>
+                                            </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href=@Url.Action("RegisteredUser", "Admin", new { }) class="nav-link">
+                                                <i class="fa fa-user-users nav-icon"></i>
+                                                <p>لیست کاربران</p>
+                                            </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+
                             <li class="nav-item">
                                 <a href="pages/widgets.html" class="nav-link">
                                     <i class="nav-icon fa fa-th"></i>
@@ -509,7 +536,8 @@
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper" style="min-height: 1283px;">
+        @*<div class="content-wrapper" style="min-height: 1283px;">*@
+        <div class="container body-content" style="min-height: 80vh;">
             <!-- Content Header (Page header) -->
             @RenderBody()
             <hr />

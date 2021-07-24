@@ -38,19 +38,18 @@ namespace BusinessLogic.Client.Authorization
                     }
             }
             return
-                string.IsNullOrEmpty(message) ?
-                new BaseResponse<Dictionary<string, string>>(message)
-                : new BaseResponse<Dictionary<string, string>>(dict);
+                string.IsNullOrEmpty(message) ? new BaseResponse<Dictionary<string, string>>(dict) : new BaseResponse<Dictionary<string, string>>(message);
         }
 
-        public bool ValidateUserToken(long userId, Guid userToken) {
+        public bool ValidateUserToken(long userId, Guid userToken)
+        {
             return _authorizationRepository.ValidateUserToken(userId, userToken);
         }
 
         public BaseResponse<long> Signup(UserSignup user)
         {
             user.Password = new Common.Utils.Hash().GetMD5Hash(user.Password);
-            var userId =_authorizationRepository.Signup(user);
+            var userId = _authorizationRepository.Signup(user);
             string message;
 
             switch (userId)

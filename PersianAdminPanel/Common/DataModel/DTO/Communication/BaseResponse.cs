@@ -50,7 +50,7 @@ namespace Common.DataModel.DTO.Communication
         }
 
         public bool HasError() {
-            return string.IsNullOrEmpty(this.Message);
+            return !string.IsNullOrEmpty(this.Message);
         }
     }
 }
