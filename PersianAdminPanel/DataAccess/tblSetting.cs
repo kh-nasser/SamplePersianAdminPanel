@@ -12,11 +12,11 @@ namespace DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class UserActivation
+    public partial class tblSetting
     {
-        public int UserId { get; set; }
-        public System.Guid ActivationCode { get; set; }
-    
-        public virtual User User { get; set; }
+        public long id { get; set; }
+        public string title { get; set; }
+        public string value { get; set; }
+        public string valueType { get; set; }
     }
 }

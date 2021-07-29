@@ -5,9 +5,14 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="5c0ba87c5aab4699b357c827f6cc4c9c" Name="Diagram1">
-        <EntityTypeShape EntityType="PersianAdminPanelModel.tblLog" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PersianAdminPanelModel.UserActivation" Width="1.5" PointX="3.375" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PersianAdminPanelModel.User" Width="1.5" PointX="3.375" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PersianAdminPanelModel.sysdiagram" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="PersianAdminPanelModel.tblLog" Width="1.5" PointX="2.75" PointY="4.75" />
+        <EntityTypeShape EntityType="PersianAdminPanelModel.tblRole" Width="1.5" PointX="0.75" PointY="1.5" />
+        <EntityTypeShape EntityType="PersianAdminPanelModel.tblSetting" Width="1.5" PointX="4.75" PointY="4.75" />
+        <EntityTypeShape EntityType="PersianAdminPanelModel.UserActivation" Width="1.5" PointX="5.25" PointY="1.5" />
+        <EntityTypeShape EntityType="PersianAdminPanelModel.User" Width="1.5" PointX="3" PointY="1" />
+        <AssociationConnector Association="PersianAdminPanelModel.FK_Users_tblRole" />
+        <AssociationConnector Association="PersianAdminPanelModel.FK_UserActivation_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

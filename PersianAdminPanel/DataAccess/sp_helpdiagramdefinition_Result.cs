@@ -10,13 +10,10 @@
 namespace DataAccess
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class UserActivation
+    public partial class sp_helpdiagramdefinition_Result
     {
-        public int UserId { get; set; }
-        public System.Guid ActivationCode { get; set; }
-    
-        public virtual User User { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

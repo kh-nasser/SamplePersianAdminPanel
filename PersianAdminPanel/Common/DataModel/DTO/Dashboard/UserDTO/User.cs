@@ -29,5 +29,9 @@ namespace Common.DataModel.DTO.Dashboard.UserDTO
         [DisplayName("آخرین ورود")]
         [DataType(DataType.DateTime)]
         public Nullable<System.DateTime> LastLoginDate { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        [ScaffoldColumn(false)]
+        public long RoleId { get; set; }
     }
 }

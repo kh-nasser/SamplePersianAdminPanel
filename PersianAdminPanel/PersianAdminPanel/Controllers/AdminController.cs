@@ -1,4 +1,4 @@
-﻿using Logger;
+﻿using PersianAdminPanel.Models;
 using PersianAdminPanel.Utils;
 using System;
 using System.Diagnostics;
@@ -6,8 +6,9 @@ using System.Web.Mvc;
 
 namespace PersianAdminPanel.Controllers
 {
-    [Authorize]
     [HandleError]
+    [Authorize]
+    [AuthorizeRoles(CustomRoles.SuperAdmin, CustomRoles.ADMIN)]
     public class AdminController : Controller
     {
         private readonly Stopwatch stopwatch = new Stopwatch();

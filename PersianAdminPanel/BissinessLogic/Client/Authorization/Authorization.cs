@@ -8,11 +8,12 @@ namespace BusinessLogic.Client.Authorization
     public class Authorization
     {
         private readonly DataAccess.Client.Authorization.Authorization _authorizationRepository = new DataAccess.Client.Authorization.Authorization();
-
+        private readonly DataAccess.Client.RegisteredUserDal _registeredUserDal = new DataAccess.Client.RegisteredUserDal();
         public BaseResponse<Dictionary<string, string>> Signin(UserSignin user)
         {
             user.Password = new Common.Utils.Hash().GetMD5Hash(user.Password);
             int? userId = _authorizationRepository.Signin(user);
+            
             var dict = new Dictionary<string, string>();
 
             string message = string.Empty;
@@ -26,6 +27,7 @@ namespace BusinessLogic.Client.Authorization
                     break;
                 default:
                     {
+                        var userDto = _registeredUserDal.Read(userId.Value);
                         Guid userToken = _authorizationRepository.UserToken(userId);
 
                         dict.Add("issued", DateTime.Now.ToString());
@@ -34,6 +36,7 @@ namespace BusinessLogic.Client.Authorization
                         dict.Add("Username", user.Username);
                         dict.Add("UserId", userId.Value.ToString());
                         dict.Add("Token", userToken.ToString());
+                        dict.Add("RoleId", userDto.RoleId.ToString());
                         break;
                     }
             }

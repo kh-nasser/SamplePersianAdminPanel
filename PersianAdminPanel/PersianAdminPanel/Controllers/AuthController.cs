@@ -1,8 +1,11 @@
 ﻿using Common.DataModel.Domain.Models;
+using Common.DataModel.DTO.Communication;
 using PersianAdminPanel.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -75,15 +78,17 @@ namespace PersianAdminPanel.Controllers
                     }
                     else
                     {
-                        result.Resource.TryGetValue("exp", out string expStr);
-                        var exp = DateTime.Parse(expStr);
-                        CookieUtils.StoreInCookie("auth", null, result.Resource, exp);
-                        FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
+                        //result.Resource.TryGetValue("exp", out string expStr);
+                        //var exp = DateTime.Parse(expStr);
+                        //CookieUtils.StoreInCookie("auth", null, result.Resource, exp);
+                        //FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
+                        // Roles.AddUserToRole(model.UserName, UserRole);
+                        CreateTicket(user, result);
                         return RedirectToAction("Dashboard", "Admin");
                         //ViewBag.account = account;
                     }
                 }
-                
+
                 stopwatch.Stop();
                 user.Password = "";
                 logger.Verbose(duration: stopwatch.ElapsedMilliseconds, response: user, request: new object[] { IPAddressHelper.GetClientIpAddress(Request), user });
@@ -95,6 +100,35 @@ namespace PersianAdminPanel.Controllers
                 logger.Fatal(exception: ex, null, request: new object[] { IPAddressHelper.GetClientIpAddress(Request), user });
                 throw ex;
             }
+        }
+
+        private void CreateTicket(UserSignin user, BaseResponse<Dictionary<string, string>> result)
+        {
+            // Roles.AddUserToRole(model.UserName, UserRole);
+            result.Resource.TryGetValue("exp", out string expStr);
+            var exp = DateTime.Parse(expStr);
+
+            result.Resource.TryGetValue("RoleId", out string roleStr);
+
+            var ticket = new FormsAuthenticationTicket(
+                  version: 1
+                  , name: user.Username
+                  , issueDate: DateTime.Now
+                  , expiration: exp//DateTime.Now.AddSeconds(HttpContext.Session.Timeout)
+                  , isPersistent: user.RememberMe
+                  , userData: String.Join("|", roleStr));
+
+            var encryptedTicket = FormsAuthentication.Encrypt(ticket);
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+
+            HttpContext.Response.Cookies.Add(cookie);
+
+
+            //CookieUtils.StoreInCookie("auth", null, result.Resource, exp);
+            //FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
+            //return RedirectToAction("Dashboard", "Admin");
+            //ViewBag.account = account;
+
         }
 
         [AllowAnonymous]

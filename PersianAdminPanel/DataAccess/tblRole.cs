@@ -12,11 +12,18 @@ namespace DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class UserActivation
+    public partial class tblRole
     {
-        public int UserId { get; set; }
-        public System.Guid ActivationCode { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tblRole()
+        {
+            this.Users = new HashSet<User>();
+        }
     
-        public virtual User User { get; set; }
+        public long Id { get; set; }
+        public string Title { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<User> Users { get; set; }
     }
 }

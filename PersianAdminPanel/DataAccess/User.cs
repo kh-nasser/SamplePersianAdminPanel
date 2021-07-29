@@ -20,5 +20,9 @@ namespace DataAccess
         public string Email { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<System.DateTime> LastLoginDate { get; set; }
+        public long FK_User_tblRole { get; set; }
+    
+        public virtual tblRole tblRole { get; set; }
+        public virtual UserActivation UserActivation { get; set; }
     }
 }
