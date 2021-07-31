@@ -172,6 +172,7 @@
     <Content Include="Content\css\ErrorPage.css" />
     <Content Include="Content\css\SigninPage.css" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Scripts\js\AjaxHelper.js" />
     <Content Include="Scripts\js\pages\error404.js" />
     <Content Include="Scripts\plugins\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Scripts\plugins\bootstrap\css\bootstrap-theme.min.css" />
